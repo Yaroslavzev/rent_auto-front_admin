@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+  import React, { Component } from "react";
 import FormField from "../UI/formField";
 import "./signin.css";
 import { validate } from "../UI/misc";
@@ -93,11 +93,13 @@ class SignIn extends Component {
             <div>
               <FormField
                 id={"email"}
+                className="registration_field"
                 formdata={this.state.formdata.email}
                 change={element => this.updateForm(element)}
               />
               <FormField
                 id={"password"}
+                className="registration_field"
                 formdata={this.state.formdata.password}
                 change={element => this.updateForm(element)}
               />

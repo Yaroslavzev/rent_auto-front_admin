@@ -10,7 +10,7 @@ import CarInfo from './components/admin/cars/carInfo';
 const Routes = (props) => {
   return (
     <div>
-      <Redirect from="/" to={props.user ? '/dashboard' : '/sign_in'}/>
+      {/* <Redirect from="/" to={props.user ? '/dashboard' : '/sign_in'}/> */}
       <Switch>  
         <PrivateRoute {...props} path="/dashboard/cars/:id" exact component={CarInfo}/>
         <PrivateRoute {...props} path="/dashboard/cars" exact component={Cars}/>
