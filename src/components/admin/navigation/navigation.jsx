@@ -8,7 +8,7 @@ const Navigation = (props) => {
 
 const links = [
     {
-        name: 'Машины',
+        name: 'Автопарк',
         linkTo: '/cars'
     }, 
     {
