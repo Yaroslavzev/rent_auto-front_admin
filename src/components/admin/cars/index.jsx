@@ -32,8 +32,7 @@ class Cars extends Component {
               <TableHead>
                 <TableRow>
                   <TableCell>id</TableCell>
-                  <TableCell>name</TableCell>
-                  <TableCell>brand</TableCell>
+                  <TableCell>full brand</TableCell>
                   <TableCell>note</TableCell>
                 </TableRow>
               </TableHead>
@@ -44,7 +43,6 @@ class Cars extends Component {
                     <TableCell>
                       <Link to={`/dashboard/cars/${item.id}`}>{item.name}</Link>
                     </TableCell>
-                    <TableCell>{item.code}</TableCell>
                     <TableCell>{item.note}</TableCell>
                   </TableRow>
                 ))}

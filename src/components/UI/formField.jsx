@@ -1,6 +1,6 @@
 import React from "react";
 
-const FormField = ({ formdata, id, change, className, style }) => {
+const FormField = ({ formdata, id, change, className, submit }) => {
   const showError = () => {
     let errorMessage = (
       <div className="error_label">
@@ -16,6 +16,7 @@ const FormField = ({ formdata, id, change, className, style }) => {
   const formTemplate = () => {
     let template = null;
     switch (formdata.element) {
+
       case "input":
         template = (
           <div>
@@ -25,7 +26,13 @@ const FormField = ({ formdata, id, change, className, style }) => {
             <input
               className={className}
               {...formdata.config}
-              style={style}
+              style={{
+                border: submit
+                  ? formdata.valid
+                    ? "1px solid green"
+                    : "1px solid red"
+                  : "1px solid #ccc"
+              }}
               value={formdata.value}
               onChange={event => change({ event, id })}
             />
@@ -33,6 +40,7 @@ const FormField = ({ formdata, id, change, className, style }) => {
           </div>
         );
         break;
+
       case "select":
         template = (
           <div>
@@ -43,7 +51,13 @@ const FormField = ({ formdata, id, change, className, style }) => {
               className={className}
               {...formdata.config}
               value={formdata.value}
-              style={style}
+              style={{
+                border: submit
+                  ? formdata.valid
+                    ? "1px solid green"
+                    : "1px solid red"
+                  : "1px solid #ccc"
+              }}
               onChange={event => change({ event, id })}
             >
               <option value="" />
@@ -57,6 +71,7 @@ const FormField = ({ formdata, id, change, className, style }) => {
           </div>
         );
         break;
+        
       default:
         template = null;
     }

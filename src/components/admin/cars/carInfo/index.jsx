@@ -117,6 +117,7 @@ class CarInfo extends Component {
               id="startDate"
               formdata={this.state.formdata.startDate}
               change={element => this.formUpdate(element)}
+              submit={this.state.formSubmit}
               
             />
             <FormField
@@ -124,6 +125,7 @@ class CarInfo extends Component {
               id="endDate"
               formdata={this.state.formdata.endDate}
               change={element => this.formUpdate(element)}
+              submit={this.state.formSubmit}
               
             />
             <FormField
@@ -131,6 +133,7 @@ class CarInfo extends Component {
               id="carList"
               formdata={this.state.formdata.carList}
               change={element => this.formUpdate(element)}
+              submit={this.state.formSubmit}
             />
 
             <div className="label_success">{this.state.formSuccess}</div>

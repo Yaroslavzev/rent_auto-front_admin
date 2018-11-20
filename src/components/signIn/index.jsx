@@ -8,6 +8,7 @@ class SignIn extends Component {
   state = {
     formError: false,
     formSuccess: "",
+    formSubmit: false,
     formdata: {
       email: {
         element: "input",
@@ -45,12 +46,11 @@ class SignIn extends Component {
     const formdata = { ...this.state.formdata };
     const formElement = { ...formdata[element.id] };
     formElement.value = element.event.target.value;
-    formdata[element.id] = formElement;
     // validation
     let validData = validate(formElement); // returns the array [valid, message]
     formElement.valid = validData[0]; // true/false
     formElement.validationMessage = validData[1]; // message
-
+    formdata[element.id] = formElement;
     this.setState({ formdata: formdata, formError: false });
   };
 
@@ -79,9 +79,11 @@ class SignIn extends Component {
     } else {
       this.setState({ formError: true });
     }
+    this.setState({formSubmit: true})
   };
 
   render() {
+    console.log(this.state.formdata.password.validationMessage)
     return (
       <div className="container">
         <div className="signin_wrapper">
@@ -95,13 +97,15 @@ class SignIn extends Component {
                 id={"email"}
                 className="registration_field"
                 formdata={this.state.formdata.email}
-                change={element => this.updateForm(element)}
+                change={element => this.updateForm(element)}   
+                submit={this.state.formSubmit}
               />
               <FormField
                 id={"password"}
                 className="registration_field"
                 formdata={this.state.formdata.password}
                 change={element => this.updateForm(element)}
+                submit={this.state.formSubmit}
               />
               {this.state.formError ? (
                 <div className="error_label">
