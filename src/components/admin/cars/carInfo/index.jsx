@@ -9,6 +9,7 @@ class CarInfo extends Component {
   state = {
     formType: "Edit",
     carId: "",
+    car: [],
     formSubmit: false,
     formError: false,
     formSuccess: "",
@@ -43,14 +44,28 @@ class CarInfo extends Component {
         validationMessage: "",
         showLabel: true
       },
-      carList: {
+      carOptions: {
         value: "",
         element: "select",
         config: {
           name: "select_car",
           type: "select",
-          label: "выберите авто",
-          cars: []
+          label: "выберите опцию для авто",
+        },
+        validation: {
+          required: true
+        },
+        valid: false,
+        validationMessage: "",
+        showLabel: true
+      }, 
+      carSpecs: {
+        value: "",
+        element: "select",
+        config: {
+          name: "select_car",
+          type: "select",
+          label: "выберите spec",
         },
         validation: {
           required: true
@@ -64,11 +79,14 @@ class CarInfo extends Component {
 
   componentDidMount() {
     axios.get(`https://api.rent-auto.biz.tm/models`).then(res => {
-      const formdata = { ...this.state.formdata };
-      const cars = formdata.carList;
-      cars.config.cars = res.data;
-      formdata.carList = cars;
-      this.setState({ formdata: formdata });
+      const id= this.props.match.params.id
+      let car;
+      for(let key in res.data){
+        if(res.data[key].id == id){
+          car = res.data[key]
+        }
+      }
+      this.setState({ car: car, carId: id });
     });
   }
 
@@ -76,8 +94,9 @@ class CarInfo extends Component {
     const formdata = { ...this.state.formdata };
     const newElement = { ...formdata[element.id] };
     newElement.value = element.event.target.value;
-    newElement.valid = validate(newElement);
-
+    const validData = validate(newElement);
+    newElement.valid = validData[0];
+    newElement.validationMessage[1];
     formdata[element.id] = newElement;
 
     this.setState({
@@ -118,7 +137,6 @@ class CarInfo extends Component {
               formdata={this.state.formdata.startDate}
               change={element => this.formUpdate(element)}
               submit={this.state.formSubmit}
-              
             />
             <FormField
               className="edit_car_formField"
@@ -126,14 +144,22 @@ class CarInfo extends Component {
               formdata={this.state.formdata.endDate}
               change={element => this.formUpdate(element)}
               submit={this.state.formSubmit}
-              
             />
             <FormField
               className="edit_car_formField"
-              id="carList"
-              formdata={this.state.formdata.carList}
+              id="carOptions"
+              formdata={this.state.formdata.carOptions}
               change={element => this.formUpdate(element)}
               submit={this.state.formSubmit}
+              options = {this.state.car.options}
+            />
+            <FormField
+              className="edit_car_formField"
+              id="carSpecs"
+              formdata={this.state.formdata.carSpecs}
+              change={element => this.formUpdate(element)}
+              submit={this.state.formSubmit}
+              options = {this.state.car.specs}
             />
 
             <div className="label_success">{this.state.formSuccess}</div>

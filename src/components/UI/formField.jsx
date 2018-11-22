@@ -1,6 +1,6 @@
 import React from "react";
 
-const FormField = ({ formdata, id, change, className, submit }) => {
+const FormField = ({ formdata, id, change, className, submit, options }) => {
   const showError = () => {
     let errorMessage = (
       <div className="error_label">
@@ -60,12 +60,15 @@ const FormField = ({ formdata, id, change, className, submit }) => {
               }}
               onChange={event => change({ event, id })}
             >
-              <option value="" />
-              {formdata.config.cars.map((item, i) => (
-                <option key={i} value={item.name}>
-                  {item.name}
+              <option value='' />
+              {options ? options.map((item, i) => (
+                <option key={i} value={item}>
+                  {item}
                 </option>
-              ))}
+              ))
+              : null
+            }
+              
             </select>
             {showError()}
           </div>
