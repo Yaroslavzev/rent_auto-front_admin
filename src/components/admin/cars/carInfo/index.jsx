@@ -4,6 +4,7 @@ import FormField from "../../../UI/formField";
 import { validate } from "../../../UI/misc";
 import "./carInfo.css";
 import axios from "axios";
+import { data } from "./data";
 
 class CarInfo extends Component {
   state = {
@@ -48,9 +49,9 @@ class CarInfo extends Component {
         value: "",
         element: "select",
         config: {
-          name: "select_car",
+          name: "select_options",
           type: "select",
-          label: "выберите опцию для авто",
+          label: "выберите опцию для авто"
         },
         validation: {
           required: true
@@ -58,19 +59,34 @@ class CarInfo extends Component {
         valid: false,
         validationMessage: "",
         showLabel: true
-      }, 
+      },
       carSpecs: {
         value: "",
         element: "select",
         config: {
-          name: "select_car",
+          name: "select_specs",
           type: "select",
-          label: "выберите spec",
+          label: "выберите spec"
         },
         validation: {
           required: true
         },
         valid: false,
+        validationMessage: "",
+        showLabel: true
+      },
+      carName: {
+        value: "",
+        element: "input",
+        config: {
+          name: "car_name",
+          type: "text",
+          label: "Название автомобиля"
+        },
+        validation: {
+          required: false
+        },
+        valid: true,
         validationMessage: "",
         showLabel: true
       }
@@ -79,16 +95,28 @@ class CarInfo extends Component {
 
   componentDidMount() {
     axios.get(`https://api.rent-auto.biz.tm/models`).then(res => {
-      const id= this.props.match.params.id
+      const id = this.props.match.params.id;
       let car;
-      for(let key in res.data){
-        if(res.data[key].id == id){
-          car = res.data[key]
+      for (let key in res.data) {
+        if (res.data[key].id == id) {
+          car = res.data[key];
         }
       }
+
       this.setState({ car: car, carId: id });
+      this.updateFields(car);
     });
   }
+
+  updateFields = car => {
+    const formdata = { ...this.state.formdata };
+    for (let key in formdata) {
+      if (key == "carName") {
+        formdata[key].value = car.name;
+      }
+    }
+    this.setState({ formdata: formdata });
+  };
 
   formUpdate = element => {
     const formdata = { ...this.state.formdata };
@@ -98,7 +126,6 @@ class CarInfo extends Component {
     newElement.valid = validData[0];
     newElement.validationMessage[1];
     formdata[element.id] = newElement;
-
     this.setState({
       formdata: formdata
     });
@@ -131,36 +158,17 @@ class CarInfo extends Component {
             onSubmit={event => this.submitHander(event)}
             className="car_edit_form"
           >
-            <FormField
-              className="edit_car_formField"
-              id="startDate"
-              formdata={this.state.formdata.startDate}
-              change={element => this.formUpdate(element)}
-              submit={this.state.formSubmit}
-            />
-            <FormField
-              className="edit_car_formField"
-              id="endDate"
-              formdata={this.state.formdata.endDate}
-              change={element => this.formUpdate(element)}
-              submit={this.state.formSubmit}
-            />
-            <FormField
-              className="edit_car_formField"
-              id="carOptions"
-              formdata={this.state.formdata.carOptions}
-              change={element => this.formUpdate(element)}
-              submit={this.state.formSubmit}
-              options = {this.state.car.options}
-            />
-            <FormField
-              className="edit_car_formField"
-              id="carSpecs"
-              formdata={this.state.formdata.carSpecs}
-              change={element => this.formUpdate(element)}
-              submit={this.state.formSubmit}
-              options = {this.state.car.specs}
-            />
+            {data.map((item, i) => (
+              <FormField
+                key={i}
+                className="edit_car_formField"
+                id={item.id}
+                formdata={this.state.formdata[item.id]}
+                change={element => this.formUpdate(element)}
+                submit={this.state.formSubmit}
+                options={this.state.car[item.options]}
+              />
+            ))}
 
             <div className="label_success">{this.state.formSuccess}</div>
             {this.state.formError ? (
