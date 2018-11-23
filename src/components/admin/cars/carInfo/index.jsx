@@ -84,7 +84,7 @@ class CarInfo extends Component {
           label: "Название автомобиля"
         },
         validation: {
-          required: false
+          required: true
         },
         valid: true,
         validationMessage: "",
@@ -112,7 +112,7 @@ class CarInfo extends Component {
     const formdata = { ...this.state.formdata };
     for (let key in formdata) {
       if (key == "carName") {
-        formdata[key].value = car.name;
+        formdata[key].value = car.full_name;
       }
     }
     this.setState({ formdata: formdata });

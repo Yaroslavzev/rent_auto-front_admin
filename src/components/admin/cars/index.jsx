@@ -41,7 +41,7 @@ class Cars extends Component {
                   <TableRow key={i}>
                     <TableCell>{item.id}</TableCell>
                     <TableCell>
-                      <Link to={`/dashboard/cars/${item.id}`}>{item.name}</Link>
+                      <Link to={`/dashboard/cars/${item.id}`}>{item.full_name}</Link>
                     </TableCell>
                     <TableCell>{item.note}</TableCell>
                   </TableRow>
