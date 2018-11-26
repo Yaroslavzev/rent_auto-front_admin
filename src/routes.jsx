@@ -38,7 +38,8 @@ class Routes extends Component  {
 
 const mapStateToProps = state => {
   return {
-    user: state.token !== null
+    user: state.token !== null,
+    token:  state.token
   }
 }
 
