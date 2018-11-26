@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import {firebase} from '../../../firebase';
 
 const Navigation = (props) => {
 
@@ -35,18 +34,10 @@ const style = {
         ))
     )
 
-
-    const logoutHandler=()=>{
-        firebase.auth().signOut().then(()=>{
-          
-        }, error=>{
-            console.log('error')
-        })
-    }
     return (    
         <List>
             {navigationLinks()}
-            <ListItem button style={style} onClick={()=> logoutHandler()}>Выйти</ListItem>
+            <ListItem button style={style}><Link to="/logout">Выйти</Link></ListItem>
         </List>
     );
 };

@@ -5,7 +5,7 @@ import Routes from './routes'
 import './app.css'
 
 import {Provider} from 'react-redux'; 
-import {createStore, applyMiddleware, compose, combineReducers} from 'redux'; 
+import {createStore, applyMiddleware, compose} from 'redux'; 
 import reducer from './store/reducer';
 import thunk from 'redux-thunk';
 
