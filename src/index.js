@@ -3,16 +3,25 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import Routes from './routes'
 import './app.css'
-import {firebase} from './firebase';
 
-const App =(props)=> {
-    return (
+import {Provider} from 'react-redux'; 
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux'; 
+import reducer from './store/reducer';
+import thunk from 'redux-thunk';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, composeEnhancers(
+    applyMiddleware(thunk)
+) )
+const app = (
+ 
+    <Provider store={store}>
         <BrowserRouter>
-        <Routes {...props}/>
+        <Routes />
         </BrowserRouter>  
-    );
-  }
+        </Provider>
+  );
 
-firebase.auth().onAuthStateChanged((user)=>{
-ReactDOM.render(<App user={user}/>, document.getElementById('root'));
-})
+
+ReactDOM.render(app, document.getElementById('root'));
+

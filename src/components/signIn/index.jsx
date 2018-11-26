@@ -2,7 +2,8 @@
 import FormField from "../UI/formField";
 import "./signin.css";
 import { validate } from "../UI/misc";
-import { firebase } from "../../firebase";
+import * as actions from '../../store/actions/actions';
+import {connect} from 'react-redux'; 
 
 class SignIn extends Component {
   state = {
@@ -57,29 +58,20 @@ class SignIn extends Component {
   submitForm = event => {
     event.preventDefault();
 
-    let dataToSubmit = {};
-    let formIsValid = true;
+    this.props.onAuth(this.state.formdata.email.value, this.state.formdata.password.value)
+    // let dataToSubmit = {};
+    // let formIsValid = true;
 
-    for (let key in this.state.formdata) {
-      dataToSubmit[key] = this.state.formdata[key].value;
-      formIsValid = this.state.formdata[key].valid && formIsValid;
-    }
-    if (formIsValid) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(dataToSubmit.email, dataToSubmit.password)
-        .then(() => {
-          this.props.history.push("/dashboard");
-        })
-        .catch(error => {
-          this.setState({
-            formError: true
-          });
-        });
-    } else {
-      this.setState({ formError: true });
-    }
-    this.setState({formSubmit: true})
+    // for (let key in this.state.formdata) {
+    //   dataToSubmit[key] = this.state.formdata[key].value;
+    //   formIsValid = this.state.formdata[key].valid && formIsValid;
+    // }
+    // if (formIsValid) {
+      
+    // } else {
+    //   this.setState({ formError: true });
+    // }
+    // this.setState({formSubmit: true})
   };
 
   render() {
@@ -122,4 +114,10 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuth: (email, password) => dispatch(actions.auth(email, password))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(SignIn);
