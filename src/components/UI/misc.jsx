@@ -20,5 +20,5 @@ export const validate = (element)=>{
 //HEADERS
 const token = localStorage.getItem('token');
 const email = 'unknown@unknown'
-export const headers = {headers:{'X-USER_TOKEN': token, 'X-USER_EMAIL': email}}
+export const headers = {headers:{'X-USER-TOKEN': token, 'X-USER-EMAIL': email}}
     
