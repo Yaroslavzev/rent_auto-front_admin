@@ -5,6 +5,8 @@ import { validate } from "../../../UI/misc";
 import "./carInfo.css";
 import axios from "axios";
 import { data } from "./data";
+import {connect} from 'react-redux'; 
+import {headers} from '../../../UI/misc';
 
 class CarInfo extends Component {
   state = {
@@ -93,8 +95,8 @@ class CarInfo extends Component {
     }
   };
 
-  componentDidMount() {
-    axios.get(`https://api.rent-auto.biz.tm/models`).then(res => {
+  componentDidMount() {      
+    axios.get(`https://api.rent-auto.biz.tm/models`, headers).then(res => {
       const id = this.props.match.params.id;
       let car;
       for (let key in res.data) {
@@ -188,4 +190,11 @@ class CarInfo extends Component {
   }
 }
 
-export default CarInfo;
+const mapStateToProps = state => {
+  return {
+    email: state.email, 
+    token: state.token
+  }
+}
+
+export default connect(mapStateToProps)(CarInfo);

@@ -10,6 +10,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import {headers} from '../../UI/misc';
+
 class Cars extends Component {
   state = {
     isLoading: true,
@@ -17,7 +19,10 @@ class Cars extends Component {
   };
 
   componentDidMount() {
-    axios.get(`https://api.rent-auto.biz.tm/models`).then(res => {
+    const token = localStorage.getItem('token');
+    const email = 'unknown@unknown'
+    axios.get(`https://api.rent-auto.biz.tm/models`, headers).then(res => {
+    
       const list = res.data;
       this.setState({ cars: list, isLoading: false });
     });

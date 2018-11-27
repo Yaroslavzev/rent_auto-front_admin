@@ -2,6 +2,7 @@ import * as actionType from './actions/actionTypes';
 import {updatedObject} from './utility';
 const initialState = {
     token: null, 
+    email: null,
     error: null, 
     loading: null, 
 }
@@ -13,6 +14,7 @@ const authStart =(state, action)=>{
 const authSuccess=(state, action)=>{
     return updatedObject(state, {
         token: action.idToken, 
+        email: action.email,
         error: null, 
         loading: false, 
     })

@@ -7,10 +7,11 @@ export const authStart = ()=>{
     }
 }
 
-export const authSuccess = (idToken)=>{
+export const authSuccess = (idToken, email)=>{
     return {
         type: actionType.AUTH_SUCCESS,
-        idToken: idToken     
+        idToken: idToken, 
+        email: email
     }
 }
 
@@ -24,7 +25,6 @@ export const authFail = (error) =>{
 export const logout=()=>{
     localStorage.removeItem('token');
     localStorage.removeItem('expirationDate')
-    // localStorage.removeItem('userId')
     return {
         type: actionType.AUTH_LOGOUT
     }
@@ -47,6 +47,7 @@ export const auth = (email, password) =>{
             password: password,  
             }
         }
+      
         axios.post('https://api.rent-auto.biz.tm/auth/sign_in', authData)
         .then( response => { 
             console.log(response)
@@ -54,7 +55,7 @@ export const auth = (email, password) =>{
             const expiresIn = new Date(new Date().getTime() + expirationTime * 1000)
             localStorage.setItem('token', response.data.authentication_token)
             localStorage.setItem('expirationDate', expiresIn)
-            dispatch(authSuccess(response.data.authentication_token))
+            dispatch(authSuccess(response.data.authentication_token, authData.user.email))
             dispatch(checkAuthTimeout(expirationTime))
         })
         .catch(err=>{

@@ -1,5 +1,4 @@
-// this function accepts this.state.formdata.email as the element and then checks its validity on 
-// the given template
+//VALIDATION
 export const validate = (element)=>{
     let error = [true, '']
 
@@ -17,3 +16,9 @@ export const validate = (element)=>{
 
     return error
 }
+
+//HEADERS
+const token = localStorage.getItem('token');
+const email = 'unknown@unknown'
+export const headers = {headers:{'X-USER_TOKEN': token, 'X-USER_EMAIL': email}}
+    
