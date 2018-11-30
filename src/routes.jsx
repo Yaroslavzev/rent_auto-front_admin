@@ -7,7 +7,7 @@ import PublicRoute from './components/authRoutes/publicRoute';
 import Cars from './components/admin/cars';
 import CarInfo from './components/admin/cars/carInfo';
 import {connect} from 'react-redux';
-import * as action from './store/actions/actions';
+import * as action from './store/actions/login';
 import Logout from './components/authRoutes/logout';
 
 class Routes extends Component  {
@@ -28,7 +28,6 @@ class Routes extends Component  {
         <PrivateRoute {...this.props} user={this.props.user} path="/logout" exact component={Logout} />
         <PublicRoute {...this.props} user={this.props.user} path="/sign_in" restricted={true} exact component={SignIn} />
         {  <Route path="/" exact /> ? <Redirect to={this.props.user ? '/dashboard' : '/sign_in'}/> : null }  
-        
       </Switch>
     </div>
   );

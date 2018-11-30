@@ -7,6 +7,7 @@ import axios from "axios";
 import { data } from "./data";
 import {connect} from 'react-redux'; 
 import {headers} from '../../../UI/misc';
+import * as action from '../../../../store/actions/edit';
 
 class CarInfo extends Component {
   state = {
@@ -17,73 +18,13 @@ class CarInfo extends Component {
     formError: false,
     formSuccess: "",
     formdata: {
-      startDate: {
-        value: "",
-        element: "input",
-        config: {
-          name: "starting_date",
-          type: "date",
-          label: "начало аренды"
-        },
-        validation: {
-          required: true
-        },
-        valid: false,
-        validationMessage: "",
-        showLabel: true
-      },
-      endDate: {
-        value: "",
-        element: "input",
-        config: {
-          name: "starting_date",
-          type: "date",
-          label: "конец аренды"
-        },
-        validation: {
-          required: true
-        },
-        valid: false,
-        validationMessage: "",
-        showLabel: true
-      },
-      carOptions: {
-        value: "",
-        element: "select",
-        config: {
-          name: "select_options",
-          type: "select",
-          label: "выберите опцию для авто"
-        },
-        validation: {
-          required: true
-        },
-        valid: false,
-        validationMessage: "",
-        showLabel: true
-      },
-      carSpecs: {
-        value: "",
-        element: "select",
-        config: {
-          name: "select_specs",
-          type: "select",
-          label: "выберите spec"
-        },
-        validation: {
-          required: true
-        },
-        valid: false,
-        validationMessage: "",
-        showLabel: true
-      },
-      carName: {
+      full_name: {
         value: "",
         element: "input",
         config: {
           name: "car_name",
           type: "text",
-          label: "Название автомобиля"
+          label: "Название модели"
         },
         validation: {
           required: true
@@ -91,12 +32,92 @@ class CarInfo extends Component {
         valid: true,
         validationMessage: "",
         showLabel: true
-      }
+      }, 
+      name: {
+        value: "",
+        element: "input",
+        config: {
+          name: "car_name",
+          type: "text",
+          label: "Имя модели"
+        },
+        validation: {
+          required: true
+        },
+        valid: true,
+        validationMessage: "",
+        showLabel: true
+      },
+      brand: {
+        value: "",
+        element: "input",
+        config: {
+          name: "car_name",
+          type: "text",
+          label: "Бренд модели"
+        },
+        validation: {
+          required: true
+        },
+        valid: true,
+        validationMessage: "",
+        showLabel: true
+      }, 
+      model_class: {
+        value: "",
+        element: "input",
+        config: {
+          name: "car_name",
+          type: "text",
+          label: "Класс модели"
+        },
+        validation: {
+          required: true
+        },
+        valid: true,
+        validationMessage: "",
+        showLabel: true
+      }, 
+      rental: {
+        value: "",
+        element: "input",
+        config: {
+          name: "car_name",
+          type: "text",
+          label: "Базовая цена"
+        },
+        validation: {
+          required: true
+        },
+        valid: true,
+        validationMessage: "",
+        showLabel: true
+      }, 
+      engine_volume: {
+        value: "",
+        element: "input",
+        config: {
+          name: "car_name",
+          type: "text",
+          label: "Объём двигателя модели"
+        },
+        validation: {
+          required: true
+        },
+        valid: true,
+        validationMessage: "",
+        showLabel: true
+      }, 
+      // tarifs: {
+      //   element: "header", 
+      //   title: 'Тарифы'
+      // }
     }
   };
 
   componentDidMount() {      
-    axios.get(`https://api.rent-auto.biz.tm/models`, headers).then(res => {
+    axios.get(`https://api.rent-auto.biz.tm/info_models`, headers).then(res => {
+      console.log(res)
       const id = this.props.match.params.id;
       let car;
       for (let key in res.data) {
@@ -104,6 +125,7 @@ class CarInfo extends Component {
           car = res.data[key];
         }
       }
+      console.log(car)
 
       this.setState({ car: car, carId: id });
       this.updateFields(car);
@@ -113,9 +135,21 @@ class CarInfo extends Component {
   updateFields = car => {
     const formdata = { ...this.state.formdata };
     for (let key in formdata) {
-      if (key == "carName") {
-        formdata[key].value = car.full_name;
-      }
+      switch(key){
+        case "full_name": 
+        formdata[key].value = car.full_name; break;
+        case "name": 
+        formdata[key].value = car.name; break;
+        case "brand": 
+        formdata[key].value = car.brand.name; break;
+        case "rental": 
+        formdata[key].value = car.rental.day_cost; break;
+        case "model_class": 
+        formdata[key].value = car.model_class.name; break;
+        case "engine_volume": 
+        formdata[key].value = car.engine_volume; break;
+        default: formdata[key].value = car.full_name;
+      }    
     }
     this.setState({ formdata: formdata });
   };
@@ -145,7 +179,14 @@ class CarInfo extends Component {
     }
     this.setState({ formSubmit: true });
     if (dataIsValid) {
-      console.log(dataToSubmit);
+      // this.props.onSubmitForm(dataToSubmit)
+      console.log({brand: dataToSubmit.brand});
+      for(let key in dataToSubmit){
+        axios.post(`https://api.site.cc/${key}/${this.state.carId}`, {[key]: dataToSubmit[key]}).then(res=>{
+          console.log(res.data)
+        })
+        console.log(`https://api.site.cc/${key}/${this.state.carId}`, {[key]: dataToSubmit[key]})
+      }    
     } else {
       console.log("select all the fields");
     }
@@ -197,4 +238,10 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(CarInfo);
+const mapDispatchToProps = dispatch => {
+  return {
+    onSubmitForm:(data)=> dispatch(action.submit(data))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CarInfo);

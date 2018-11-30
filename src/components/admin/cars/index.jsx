@@ -19,8 +19,6 @@ class Cars extends Component {
   };
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-    const email = 'unknown@unknown'
     axios.get(`https://api.rent-auto.biz.tm/models`, headers).then(res => {
     
       const list = res.data;

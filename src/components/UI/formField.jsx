@@ -75,6 +75,11 @@ const FormField = ({ formdata, id, change, className, submit, options }) => {
         );
         break;
         
+            case 'header': 
+            template = (
+              <h2>{formdata.title}</h2>
+            ); break;
+
       default:
         template = null;
     }

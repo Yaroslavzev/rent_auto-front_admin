@@ -1,20 +1,26 @@
 export const data = [
     {
-        id:"carName", 
+        id:"full_name", 
     }, 
     {
-        id:"startDate",  
+        id:"name", 
+    },
+    {
+        id:"brand", 
+    },  
+    {
+        id:"model_class", 
     }, 
     {
-        id:"endDate",  
-    }, 
-
+        id:"rental", 
+    },
     {
-        id:"carOptions",  options: 'options'
-    }, 
-    {
-        id:"carSpecs",  options: 'specs'
-    }, 
+        id:"engine_volume", 
+    },  
+    // {
+    //     id:"tarifs", 
+    // },  
+   
 
 
 

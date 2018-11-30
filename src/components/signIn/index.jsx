@@ -2,7 +2,7 @@
 import FormField from "../UI/formField";
 import "./signin.css";
 import { validate } from "../UI/misc";
-import * as actions from '../../store/actions/actions';
+import * as actions from '../../store/actions/login';
 import {connect} from 'react-redux'; 
 
 class SignIn extends Component {
