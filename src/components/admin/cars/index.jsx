@@ -19,8 +19,8 @@ class Cars extends Component {
   };
 
   componentDidMount() {
-    axios.get(`https://api.rent-auto.biz.tm/models`, headers).then(res => {
-    
+    axios.get(`https://api.rent-auto.biz.tm/info_models`, headers).then(res => {
+    console.log(res.data)
       const list = res.data;
       this.setState({ cars: list, isLoading: false });
     });

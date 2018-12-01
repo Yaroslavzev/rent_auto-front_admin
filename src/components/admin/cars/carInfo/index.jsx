@@ -5,13 +5,14 @@ import { validate } from "../../../UI/misc";
 import "./carInfo.css";
 import axios from "axios";
 import { data } from "./data";
-import {connect} from 'react-redux'; 
-import {headers} from '../../../UI/misc';
-import * as action from '../../../../store/actions/edit';
+import { connect } from "react-redux";
+import { headers } from "../../../UI/misc";
+import * as action from "../../../../store/actions/edit";
+import {update} from './functions'
 
 class CarInfo extends Component {
   state = {
-    formType: "Edit",
+    formType: "",
     carId: "",
     car: [],
     formSubmit: false,
@@ -32,7 +33,7 @@ class CarInfo extends Component {
         valid: true,
         validationMessage: "",
         showLabel: true
-      }, 
+      },
       name: {
         value: "",
         element: "input",
@@ -62,7 +63,7 @@ class CarInfo extends Component {
         valid: true,
         validationMessage: "",
         showLabel: true
-      }, 
+      },
       model_class: {
         value: "",
         element: "input",
@@ -77,7 +78,7 @@ class CarInfo extends Component {
         valid: true,
         validationMessage: "",
         showLabel: true
-      }, 
+      },
       rental: {
         value: "",
         element: "input",
@@ -92,7 +93,7 @@ class CarInfo extends Component {
         valid: true,
         validationMessage: "",
         showLabel: true
-      }, 
+      },
       engine_volume: {
         value: "",
         element: "input",
@@ -107,17 +108,17 @@ class CarInfo extends Component {
         valid: true,
         validationMessage: "",
         showLabel: true
-      }, 
+      }
       // tarifs: {
-      //   element: "header", 
+      //   element: "header",
       //   title: 'Тарифы'
       // }
     }
   };
 
-  componentDidMount() {      
+  componentDidMount() {
     axios.get(`https://api.rent-auto.biz.tm/info_models`, headers).then(res => {
-      console.log(res)
+      console.log(res);
       const id = this.props.match.params.id;
       let car;
       for (let key in res.data) {
@@ -125,7 +126,7 @@ class CarInfo extends Component {
           car = res.data[key];
         }
       }
-      console.log(car)
+      console.log(car);
 
       this.setState({ car: car, carId: id });
       this.updateFields(car);
@@ -133,25 +134,36 @@ class CarInfo extends Component {
   }
 
   updateFields = car => {
-    const formdata = { ...this.state.formdata };
-    for (let key in formdata) {
-      switch(key){
-        case "full_name": 
-        formdata[key].value = car.full_name; break;
-        case "name": 
-        formdata[key].value = car.name; break;
-        case "brand": 
-        formdata[key].value = car.brand.name; break;
-        case "rental": 
-        formdata[key].value = car.rental.day_cost; break;
-        case "model_class": 
-        formdata[key].value = car.model_class.name; break;
-        case "engine_volume": 
-        formdata[key].value = car.engine_volume; break;
-        default: formdata[key].value = car.full_name;
-      }    
+    if(car){
+      const formdata = { ...this.state.formdata };
+      for (let key in formdata) {
+        switch (key) {
+          case "full_name":
+            formdata[key].value = car.full_name;
+            break;
+          case "name":
+            formdata[key].value = car.name;
+            break;
+          case "brand":
+            formdata[key].value = car.brand.name;
+            break;
+          case "rental":
+            formdata[key].value = car.rental.day_cost;
+            break;
+          case "model_class":
+            formdata[key].value = car.model_class.name;
+            break;
+          case "engine_volume":
+            formdata[key].value = car.engine_volume;
+            break;
+          default:
+            formdata[key].value = car.full_name;
+        }
+      }
+      this.setState({ formdata: formdata, formType: 'edit' });
+    } else {
+      this.setState({ formType: 'add' });
     }
-    this.setState({ formdata: formdata });
   };
 
   formUpdate = element => {
@@ -180,13 +192,30 @@ class CarInfo extends Component {
     this.setState({ formSubmit: true });
     if (dataIsValid) {
       // this.props.onSubmitForm(dataToSubmit)
-      console.log({brand: dataToSubmit.brand});
-      for(let key in dataToSubmit){
-        axios.post(`https://api.site.cc/${key}/${this.state.carId}`, {[key]: dataToSubmit[key]}).then(res=>{
-          console.log(res.data)
-        })
-        console.log(`https://api.site.cc/${key}/${this.state.carId}`, {[key]: dataToSubmit[key]})
-      }    
+      if(this.state.carId) {
+      for (let key in dataToSubmit) {
+           axios
+          .post(` https://api.rent-auto.biz.tm/${key}/${this.state.carId}`, {
+            [key]: dataToSubmit[key]
+          })
+          .then(res => {
+            console.log(res.data);
+            
+          });
+           console.log(`https://api.rent-auto.biz.tm/${key}/${this.state.carId}`, {
+          [key]: dataToSubmit[key]
+        });
+        }
+      }
+      else {
+          const newdata = {
+            id: dataToSubmit.length+1, 
+            ...dataToSubmit
+          }
+          console.log(newdata)
+        }
+       
+       
     } else {
       console.log("select all the fields");
     }
@@ -209,7 +238,7 @@ class CarInfo extends Component {
                 formdata={this.state.formdata[item.id]}
                 change={element => this.formUpdate(element)}
                 submit={this.state.formSubmit}
-                options={this.state.car[item.options]}
+                
               />
             ))}
 
@@ -233,15 +262,18 @@ class CarInfo extends Component {
 
 const mapStateToProps = state => {
   return {
-    email: state.email, 
+    email: state.email,
     token: state.token
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSubmitForm:(data)=> dispatch(action.submit(data))
-  }
-}
+    onSubmitForm: data => dispatch(action.submit(data))
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(CarInfo);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CarInfo);

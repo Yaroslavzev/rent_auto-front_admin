@@ -12,7 +12,7 @@ const links = [
     }, 
     {
         name: 'Добавить Авто',
-        linkTo: '/add_car'
+        linkTo: '/add'
     }, 
 
 ]

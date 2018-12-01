@@ -22,6 +22,7 @@ class Routes extends Component  {
   return (
     <div>
       <Switch>  
+        <PrivateRoute {...this.props} user={this.props.user} path="/dashboard/add" exact component={CarInfo}/>
         <PrivateRoute {...this.props} user={this.props.user} path="/dashboard/cars/:id" exact component={CarInfo}/>
         <PrivateRoute {...this.props} user={this.props.user} path="/dashboard/cars" exact component={Cars}/>
         <PrivateRoute {...this.props} user={this.props.user} path="/dashboard" exact component={Dashboard}/>
