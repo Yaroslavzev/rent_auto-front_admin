@@ -238,7 +238,6 @@ class CarInfo extends Component {
                 formdata={this.state.formdata[item.id]}
                 change={element => this.formUpdate(element)}
                 submit={this.state.formSubmit}
-                
               />
             ))}
 
