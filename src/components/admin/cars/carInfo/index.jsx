@@ -8,7 +8,6 @@ import { data } from "./data";
 import { connect } from "react-redux";
 import { headers } from "../../../UI/misc";
 import * as action from "../../../../store/actions/edit";
-import {update} from './functions'
 
 class CarInfo extends Component {
   state = {
@@ -128,13 +127,13 @@ class CarInfo extends Component {
       }
       console.log(car);
 
-      this.setState({ car: car, carId: id });
+      this.setState({ car, carId: id });
       this.updateFields(car);
     });
   }
 
   updateFields = car => {
-    if(car){
+    if (car) {
       const formdata = { ...this.state.formdata };
       for (let key in formdata) {
         switch (key) {
@@ -160,9 +159,9 @@ class CarInfo extends Component {
             formdata[key].value = car.full_name;
         }
       }
-      this.setState({ formdata: formdata, formType: 'edit' });
+      this.setState({ formdata: formdata, formType: "edit" });
     } else {
-      this.setState({ formType: 'add' });
+      this.setState({ formType: "add" });
     }
   };
 
@@ -191,32 +190,51 @@ class CarInfo extends Component {
     }
     this.setState({ formSubmit: true });
     if (dataIsValid) {
-      // this.props.onSubmitForm(dataToSubmit)
-      if(this.state.carId) {
-      for (let key in dataToSubmit) {
-           axios
-          .post(` https://api.rent-auto.biz.tm/${key}/${this.state.carId}`, {
-            [key]: dataToSubmit[key]
-          })
-          .then(res => {
-            console.log(res.data);
-            
-          });
-           console.log(`https://api.rent-auto.biz.tm/${key}/${this.state.carId}`, {
-          [key]: dataToSubmit[key]
-        });
+
+      if (this.state.carId) {
+        const model = {
+          ...this.state.car,
+          brand: { ...this.state.car.brand, name: dataToSubmit.brand },
+          engine_volume: dataToSubmit.engine_volume,
+          full_name: dataToSubmit.full_name,
+          name: dataToSubmit.name,
+          model_class: {
+            ...this.state.car.model_class,
+            name: dataToSubmit.model_class
+          },
+          rental: { ...this.state.car.rental, day_cost: dataToSubmit.rental }
+        };
+
+        // equation check: if no change the form wont be sent
+        const postJSON = JSON.stringify(model);
+        const getJSON = JSON.stringify(this.state.car);
+        if (postJSON !== getJSON) {
+          axios
+            .patch(
+              `https://api.rent-auto.biz.tm/info_models/${JSON.parse(
+                model.id
+              )}`,
+              model,
+              headers
+            )
+            .then(res => {
+              console.log("success");
+              console.log(res.data);
+            });
+        } else {
+          return;
         }
-      }
+      } 
+      
       else {
-          const newdata = {
-            id: dataToSubmit.length+1, 
-            ...dataToSubmit
-          }
-          console.log(newdata)
-        }
-       
-       
-    } else {
+        const newdata = {
+          ...dataToSubmit
+        };
+        console.log(newdata);
+      }
+    } 
+    
+    else {
       console.log("select all the fields");
     }
   };

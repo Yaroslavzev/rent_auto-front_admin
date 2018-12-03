@@ -25,8 +25,9 @@ class Routes extends Component  {
         <PrivateRoute {...this.props} user={this.props.user} path="/dashboard/add" exact component={CarInfo}/>
         <PrivateRoute {...this.props} user={this.props.user} path="/dashboard/cars/:id" exact component={CarInfo}/>
         <PrivateRoute {...this.props} user={this.props.user} path="/dashboard/cars" exact component={Cars}/>
-        <PrivateRoute {...this.props} user={this.props.user} path="/dashboard" exact component={Dashboard}/>
+        
         <PrivateRoute {...this.props} user={this.props.user} path="/logout" exact component={Logout} />
+        <PrivateRoute {...this.props} user={this.props.user} path="/dashboard" exact component={Dashboard}/>
         <PublicRoute {...this.props} user={this.props.user} path="/sign_in" restricted={true} exact component={SignIn} />
         {  <Route path="/" exact /> ? <Redirect to={this.props.user ? '/dashboard' : '/sign_in'}/> : null }  
       </Switch>
@@ -38,7 +39,7 @@ class Routes extends Component  {
 
 const mapStateToProps = state => {
   return {
-    user: state.token !== null,
+    user: state.login.token !== null
   }
 }
 

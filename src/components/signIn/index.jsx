@@ -75,7 +75,6 @@ class SignIn extends Component {
   };
 
   render() {
-    console.log(this.state.formdata.password.validationMessage)
     return (
       <div className="container">
         <div className="signin_wrapper">

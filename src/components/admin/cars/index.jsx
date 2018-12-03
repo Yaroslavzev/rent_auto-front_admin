@@ -21,7 +21,7 @@ class Cars extends Component {
   componentDidMount() {
     axios.get(`https://api.rent-auto.biz.tm/info_models`, headers).then(res => {
     console.log(res.data)
-      const list = res.data;
+    const list = res.data.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0)); 
       this.setState({ cars: list, isLoading: false });
     });
   }

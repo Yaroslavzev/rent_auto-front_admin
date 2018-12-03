@@ -28,10 +28,10 @@ const authFail = (state, action)=>{
 }
 
 const logout=(state, action)=>{
-    return updatedObject(state, {token: null, userId: null })
+    return updatedObject(state, {token: null })
 }
 
-const reducer = (state=initialState, action) => {
+const login = (state=initialState, action) => {
    switch(action.type){
     case actionType.AUTH_START: 
     return authStart(state, action);
@@ -46,4 +46,4 @@ const reducer = (state=initialState, action) => {
   
 };
 
-export default reducer;
+export default login;
