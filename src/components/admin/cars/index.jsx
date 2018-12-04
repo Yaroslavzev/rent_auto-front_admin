@@ -10,6 +10,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import {headers} from '../../UI/misc';
+
 class Cars extends Component {
   state = {
     isLoading: true,
@@ -17,8 +19,9 @@ class Cars extends Component {
   };
 
   componentDidMount() {
-    axios.get(`https://api.rent-auto.biz.tm/models`).then(res => {
-      const list = res.data;
+    axios.get(`https://api.rent-auto.biz.tm/info_models`, headers).then(res => {
+    console.log(res.data)
+    const list = res.data.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0)); 
       this.setState({ cars: list, isLoading: false });
     });
   }
@@ -32,8 +35,7 @@ class Cars extends Component {
               <TableHead>
                 <TableRow>
                   <TableCell>id</TableCell>
-                  <TableCell>name</TableCell>
-                  <TableCell>brand</TableCell>
+                  <TableCell>full brand</TableCell>
                   <TableCell>note</TableCell>
                 </TableRow>
               </TableHead>
@@ -42,9 +44,8 @@ class Cars extends Component {
                   <TableRow key={i}>
                     <TableCell>{item.id}</TableCell>
                     <TableCell>
-                      <Link to={`/dashboard/cars/${item.id}`}>{item.name}</Link>
+                      <Link to={`/dashboard/cars/${item.id}`}>{item.full_name}</Link>
                     </TableCell>
-                    <TableCell>{item.code}</TableCell>
                     <TableCell>{item.note}</TableCell>
                   </TableRow>
                 ))}

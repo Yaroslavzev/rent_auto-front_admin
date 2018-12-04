@@ -1,18 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
-import Routes from './routes'
-import './app.css'
-import {firebase} from './firebase';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Router } from "react-router-dom";
+import Routes from "./routes";
+import "./app.css";
 
-const App =(props)=> {
-    return (
-        <BrowserRouter>
-        <Routes {...props}/>
-        </BrowserRouter>  
-    );
-  }
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware, compose } from "redux";
 
-firebase.auth().onAuthStateChanged((user)=>{
-ReactDOM.render(<App user={user}/>, document.getElementById('root'));
-})
+import thunk from "redux-thunk";
+import { createBrowserHistory } from "history";
+import { routerMiddleware } from "react-router-redux";
+import rootReducer from "./store/reducers";
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+export const history = createBrowserHistory();
+
+const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(routerMiddleware(history), thunk))
+);
+
+const app = (
+  <Provider store={store}>
+    <Router history={history}>
+      <Routes />
+    </Router>
+  </Provider>
+);
+
+ReactDOM.render(app, document.getElementById("root"));

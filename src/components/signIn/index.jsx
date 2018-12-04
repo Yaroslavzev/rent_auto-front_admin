@@ -1,13 +1,15 @@
-import React, { Component } from "react";
+  import React, { Component } from "react";
 import FormField from "../UI/formField";
 import "./signin.css";
 import { validate } from "../UI/misc";
-import { firebase } from "../../firebase";
+import * as actions from '../../store/actions/login';
+import {connect} from 'react-redux'; 
 
 class SignIn extends Component {
   state = {
     formError: false,
     formSuccess: "",
+    formSubmit: false,
     formdata: {
       email: {
         element: "input",
@@ -45,40 +47,31 @@ class SignIn extends Component {
     const formdata = { ...this.state.formdata };
     const formElement = { ...formdata[element.id] };
     formElement.value = element.event.target.value;
-    formdata[element.id] = formElement;
     // validation
     let validData = validate(formElement); // returns the array [valid, message]
     formElement.valid = validData[0]; // true/false
     formElement.validationMessage = validData[1]; // message
-
+    formdata[element.id] = formElement;
     this.setState({ formdata: formdata, formError: false });
   };
 
   submitForm = event => {
     event.preventDefault();
 
-    let dataToSubmit = {};
-    let formIsValid = true;
+    this.props.onAuth(this.state.formdata.email.value, this.state.formdata.password.value)
+    // let dataToSubmit = {};
+    // let formIsValid = true;
 
-    for (let key in this.state.formdata) {
-      dataToSubmit[key] = this.state.formdata[key].value;
-      formIsValid = this.state.formdata[key].valid && formIsValid;
-    }
-    if (formIsValid) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(dataToSubmit.email, dataToSubmit.password)
-        .then(() => {
-          this.props.history.push("/dashboard");
-        })
-        .catch(error => {
-          this.setState({
-            formError: true
-          });
-        });
-    } else {
-      this.setState({ formError: true });
-    }
+    // for (let key in this.state.formdata) {
+    //   dataToSubmit[key] = this.state.formdata[key].value;
+    //   formIsValid = this.state.formdata[key].valid && formIsValid;
+    // }
+    // if (formIsValid) {
+      
+    // } else {
+    //   this.setState({ formError: true });
+    // }
+    // this.setState({formSubmit: true})
   };
 
   render() {
@@ -93,13 +86,17 @@ class SignIn extends Component {
             <div>
               <FormField
                 id={"email"}
+                className="registration_field"
                 formdata={this.state.formdata.email}
-                change={element => this.updateForm(element)}
+                change={element => this.updateForm(element)}   
+                submit={this.state.formSubmit}
               />
               <FormField
                 id={"password"}
+                className="registration_field"
                 formdata={this.state.formdata.password}
                 change={element => this.updateForm(element)}
+                submit={this.state.formSubmit}
               />
               {this.state.formError ? (
                 <div className="error_label">
@@ -116,4 +113,10 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuth: (email, password) => dispatch(actions.auth(email, password))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(SignIn);
